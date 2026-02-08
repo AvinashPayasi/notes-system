@@ -1,4 +1,4 @@
-package com.securenotes;
+package com.securenotes.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

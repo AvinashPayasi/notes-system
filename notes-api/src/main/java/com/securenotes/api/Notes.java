@@ -1,4 +1,4 @@
-package com.securenotes;
+package com.securenotes.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
