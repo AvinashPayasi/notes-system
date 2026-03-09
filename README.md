@@ -11,4 +11,4 @@ Backend application for managing notes securely using Spring Boot and PostgreSQL
 ## Setup
 1. Copy `application-example.properties` to `application.properties`
 2. Fill database credentials
-3. Run using `./mvnw spring-boot:run`
+3. Run using `./mvnw -pl notes-api spring-boot:run`

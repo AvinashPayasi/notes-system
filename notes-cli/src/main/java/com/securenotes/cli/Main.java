@@ -2,6 +2,10 @@ package com.securenotes.cli;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.printf("Hello and welcome!");
+
+        Client client= new Client();
+        ClientService clientService= new ClientService(client);
+        UserInteraction userInteraction= new UserInteraction(clientService);
+        userInteraction.home();
     }
 }
