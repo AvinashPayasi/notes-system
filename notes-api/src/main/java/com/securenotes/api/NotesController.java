@@ -33,7 +33,7 @@ public class NotesController {
                 return notesService.getArchivedNotes(page, size, sort);
             case "pinned":
                 return notesService.getPinnedNotes(page, size, sort);
-            case "trashed":
+            case "trash":
                 return notesService.getTrashedNotes(page, size, sort);
             default:
                 throw new IllegalArgumentException("Invalid State: "+state);

@@ -6,6 +6,6 @@ public class Main {
         Client client= new Client();
         ClientService clientService= new ClientService(client);
         UserInteraction userInteraction= new UserInteraction(clientService);
-        userInteraction.home();
+        userInteraction.startCli();
     }
 }
