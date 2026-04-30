@@ -1,12 +1,12 @@
-package com.securenotes.api;
+package com.notes.system.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SecureNotesApplication {
+public class NotesSystemApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SecureNotesApplication.class, args);
+		SpringApplication.run(NotesSystemApplication.class, args);
 	}
 }

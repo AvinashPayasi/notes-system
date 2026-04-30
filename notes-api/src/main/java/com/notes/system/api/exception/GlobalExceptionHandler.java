@@ -1,0 +1,57 @@
+package com.notes.system.api.exception;
+
+import com.notes.system.api.ApiResponse;
+import com.notes.system.api.ApiStatus;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.NoSuchElementException;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(NoteNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleNoteNotFound(NoteNotFoundException exception){
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage(), null);
+
+        //Status Code: 404
+        return new ResponseEntity<ApiResponse<Object>>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ApiResponse<Object>> handleInvalidCredentialsException(InvalidCredentialsException exception){
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage(), null);
+
+        //Status Code: 401
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsExcpetion.class)
+    public ResponseEntity<ApiResponse<Object>> handleUserAlreadyExistsException(UserAlreadyExistsExcpetion exception){
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage(), null);
+
+        //Status Code: 409
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiResponse<Object>> handleBadCredentialsException(BadCredentialsException exception){
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, "Invalid username or password", null);
+
+        //Status Code: 401
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Object>> handleGeneralException(Exception exception){
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage(), null);
+
+        //Status Code: 500
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}

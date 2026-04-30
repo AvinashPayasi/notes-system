@@ -1,4 +1,8 @@
-package com.securenotes.api;
+package com.notes.system.api.service;
+import com.notes.system.api.exception.NoteNotFoundException;
+import com.notes.system.api.dto.LogInRequest;
+import com.notes.system.api.entity.Notes;
+import com.notes.system.api.repo.NotesRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,7 +33,7 @@ public class NotesService {
     }
 
     public Notes getNotesById(int notesId) {
-        return notesRepo.findById(notesId).orElse(new Notes());
+        return notesRepo.findByNotesIdAndIsDeletedFalse(notesId).orElseThrow(() -> new NoteNotFoundException("Note not found with id: "+notesId));
     }
 
     @Transactional
@@ -75,7 +79,7 @@ public class NotesService {
     }
 
     public Notes getTrashNoteById(int notesId) {
-        return notesRepo.findByNotesIdAndIsDeletedTrue(notesId);
+        return notesRepo.findByNotesIdAndIsDeletedTrue(notesId).orElseThrow(() -> new NoteNotFoundException("Note not found with id: "+notesId));
     }
 
     @Transactional
@@ -123,4 +127,7 @@ public class NotesService {
         notesRepo.saveAll(notes);
     }
 
+    public void loginUser(LogInRequest logInRequest) {
+
+    }
 }

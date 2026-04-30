@@ -1,8 +1,14 @@
-package com.securenotes.api;
+package com.notes.system.api.controller;
 
+import com.notes.system.api.ApiResponse;
+import com.notes.system.api.ApiStatus;
+import com.notes.system.api.entity.Notes;
+import com.notes.system.api.service.NotesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -18,10 +24,10 @@ public class NotesController {
 
     @GetMapping("/notes")
     public PagedModel<Notes> getNotes(@RequestParam(required = false) String state,
-                               @RequestParam(defaultValue="0") int page,
-                               @RequestParam(defaultValue = "10")int size,
-                               @RequestParam(defaultValue = "createdAt") String sortBy,
-                               @RequestParam(defaultValue = "asc") String direction)
+                                      @RequestParam(defaultValue="0") int page,
+                                      @RequestParam(defaultValue = "10")int size,
+                                      @RequestParam(defaultValue = "createdAt") String sortBy,
+                                      @RequestParam(defaultValue = "asc") String direction)
     {
         Sort sort= Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC,sortBy);
 
@@ -51,8 +57,12 @@ public class NotesController {
     }
 
     @GetMapping("/notes/{notesId}")
-    public Notes getNotesById(@PathVariable int notesId){
-        return notesService.getNotesById(notesId);
+    public ResponseEntity<ApiResponse<Notes>> getNotesById(@PathVariable int notesId){
+        Notes note = notesService.getNotesById(notesId);
+        ApiResponse<Notes> response= new ApiResponse<>(ApiStatus.SUCCESS, "Note fetched Successfully", note);
+
+        //Status Code: 200
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/notes/{notesId}")
@@ -61,8 +71,13 @@ public class NotesController {
     }
 
     @GetMapping("/notes/{notesId}/trash")
-    public Notes getTrashNoteById(@PathVariable int notesId){
-        return notesService.getTrashNoteById(notesId);
+    public ResponseEntity<ApiResponse<Notes>> getTrashNoteById(@PathVariable int notesId){
+        Notes note= notesService.getTrashNoteById(notesId);
+
+        ApiResponse<Notes> response = new ApiResponse<>(ApiStatus.SUCCESS, "Note fetched successfully", note);
+
+        //Status Code: 200
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PatchMapping("/notes/{notesId}/recover")
@@ -99,4 +114,5 @@ public class NotesController {
     public void unarchiveNote(@PathVariable int notesId){
         notesService.unarchiveNotes(notesId);
     }
+
 }

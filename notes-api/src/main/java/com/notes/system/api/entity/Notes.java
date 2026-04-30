@@ -1,9 +1,10 @@
-package com.securenotes.api;
+package com.notes.system.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -78,5 +79,9 @@ public class Notes {
     @JsonIgnore
     public boolean getIsArchived() {
         return isArchived;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt.toLocalDateTime().toLocalDate();
     }
 }
