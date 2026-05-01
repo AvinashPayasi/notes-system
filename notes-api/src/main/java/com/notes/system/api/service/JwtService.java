@@ -2,6 +2,7 @@ package com.notes.system.api.service;
 
 import com.notes.system.api.UsersDetails;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,17 +19,9 @@ public class JwtService {
     @Value(("${jwt.expiration}"))
     private Long jwtExpirationTime;
 
-    public Claims validateAndGetClaims(String token){
-        try {
+    public Claims validateAndGetClaims(String token) throws RuntimeException{
             Claims claims = parseClaims(token);
-            if (isTokenNonExpired(claims)) {
-                return claims;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
+            return claims;
     }
 
     public String generateToken(UsersDetails usersDetails){
