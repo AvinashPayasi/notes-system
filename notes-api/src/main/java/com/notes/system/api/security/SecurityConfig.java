@@ -1,8 +1,7 @@
-package com.notes.system.api.config;
+package com.notes.system.api.security;
 
 import com.notes.system.api.UsersDetails;
-import com.notes.system.api.filter.JwtAuthenticationFilter;
-import com.notes.system.api.repo.UsersRepo;
+import com.notes.system.api.repository.UsersRepo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

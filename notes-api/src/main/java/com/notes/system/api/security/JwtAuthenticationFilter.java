@@ -1,8 +1,7 @@
-package com.notes.system.api.filter;
+package com.notes.system.api.security;
 
 import com.notes.system.api.ApiResponse;
 import com.notes.system.api.ApiStatus;
-import com.notes.system.api.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -20,8 +19,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -50,9 +49,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                String userId = claims.getSubject();
+                UUID userId = UUID.fromString(claims.getSubject());
 
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, null, List.of());
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userId,
+                        null,
+                        List.of()
+                );
 
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -61,13 +64,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         }catch (ExpiredJwtException expiredJwtException){
-            ApiResponse<Object> apiResponse=new ApiResponse(ApiStatus.ERROR, "Token expired", null);
+            ApiResponse<Object> apiResponse=new ApiResponse(ApiStatus.ERROR, "Token expired");
             writeResponse(response, apiResponse);
-            return;
         }catch (SignatureException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException exception){
-            ApiResponse<Object> apiResponse=new ApiResponse(ApiStatus.ERROR, "Invalid token", null);
+            ApiResponse<Object> apiResponse=new ApiResponse(ApiStatus.ERROR, "Invalid token");
             writeResponse(response, apiResponse);
-            return;
         }
     }
 

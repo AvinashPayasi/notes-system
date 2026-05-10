@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoteNotFoundException.class)
     public ResponseEntity<ApiResponse<Object>> handleNoteNotFound(NoteNotFoundException exception){
-        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage(), null);
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage());
 
         //Status Code: 404
         return new ResponseEntity<ApiResponse<Object>>(response, HttpStatus.NOT_FOUND);
@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ApiResponse<Object>> handleInvalidCredentialsException(InvalidCredentialsException exception){
-        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage(), null);
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage());
 
         //Status Code: 401
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsExcpetion.class)
     public ResponseEntity<ApiResponse<Object>> handleUserAlreadyExistsException(UserAlreadyExistsExcpetion exception){
-        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage(), null);
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage());
 
         //Status Code: 409
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
@@ -41,15 +41,31 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiResponse<Object>> handleBadCredentialsException(BadCredentialsException exception){
-        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, "Invalid username or password", null);
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, "Invalid username or password");
 
         //Status Code: 401
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(EmptyNoteException.class)
+    public ResponseEntity<ApiResponse<Object>> handleEmptyNoteException(EmptyNoteException exception){
+        ApiResponse response= new ApiResponse(ApiStatus.ERROR, exception.getMessage());
+
+        //Status Code: 400
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidNoteStateException.class)
+    public ResponseEntity<ApiResponse<Object>> handleInvalidNoteStateException(InvalidNoteStateException exception){
+        ApiResponse<Object> response=new ApiResponse<>(ApiStatus.ERROR, exception.getMessage());
+
+        //Status Code: 409
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleGeneralException(Exception exception){
-        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage(), null);
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage());
 
         //Status Code: 500
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

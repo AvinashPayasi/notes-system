@@ -1,4 +1,4 @@
-package com.notes.system.api.repo;
+package com.notes.system.api.repository;
 
 import com.notes.system.api.entity.Users;
 import org.springframework.data.repository.CrudRepository;

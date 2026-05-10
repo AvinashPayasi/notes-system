@@ -1,34 +1,41 @@
 package com.notes.system.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.annotation.Nullable;
+import com.notes.system.api.entity.enums.NotesState;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
+
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name="notes")
 public class Notes {
+    @Column(name="user_id")
+    private UUID userId;
     @Id
-    @Column(name = "notes_id")
+    @Column(name = "note_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int notesId;
+    private int noteId;
     private String title;
-    private String notes;
+    private String note;
     @Column(name="created_at", updatable = false, insertable = false)
     private Timestamp createdAt;
-    @Column(name="is_deleted")
-    private boolean isDeleted=false;
-    @Column(name="is_pinned")
-    private boolean isPinned=false;
-    @Column(name="is_archived")
-    private boolean isArchived=false;
-    @Column(name="deleted_at")
-    private Timestamp deletedAt;
+    private boolean pinned;
+    @Enumerated(EnumType.STRING)
+    @JdbcType(value = PostgreSQLEnumJdbcType.class)
+    private NotesState state=NotesState.ACTIVE;
+
+    protected Notes(){}
+
+    public Notes(UUID userId, String title, String note){
+        this.userId=userId;
+        this.title=title;
+        this.note=note;
+    }
 
     public int getNotesId(){
-        return notesId;
+        return noteId;
     }
 
     public String getTitle(){
@@ -39,49 +46,28 @@ public class Notes {
         this.title=title;
     }
 
-    public String getNotes(){
-        return notes;
+    public String getNote(){
+        return note;
     }
 
-    public void setNotes(String notes){
-        this.notes=notes;
+    public boolean isPinned(){
+        return pinned;
     }
 
-    @JsonIgnore
-    public boolean getIsDeleted(){
-        return isDeleted;
+    public void setPinned(boolean pinned){
+        this.pinned=pinned;
     }
 
-    public void setIsDeleted(boolean value){
-        this.isDeleted=value;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDeletedAt(@Nullable Timestamp deletedAt) {
-        this.deletedAt = deletedAt;
+    public NotesState getState(){
+        return state;
     }
 
-    public void setDeletedAt(){
-        deletedAt= Timestamp.valueOf(LocalDateTime.now());
+    public void setState(NotesState state){
+        this.state=state;
     }
 
-    public boolean getIsPinned(){
-        return isPinned;
-    }
-
-    public void setIsPinned(boolean value){
-        this.isPinned=value;
-    }
-
-    public void setIsArchived(boolean value) {
-        this.isArchived=value;
-    }
-
-    @JsonIgnore
-    public boolean getIsArchived() {
-        return isArchived;
-    }
-
-    public LocalDate getCreatedAt() {
-        return createdAt.toLocalDateTime().toLocalDate();
-    }
 }

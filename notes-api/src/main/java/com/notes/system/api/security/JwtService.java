@@ -1,8 +1,7 @@
-package com.notes.system.api.service;
+package com.notes.system.api.security;
 
 import com.notes.system.api.UsersDetails;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +25,7 @@ public class JwtService {
 
     public String generateToken(UsersDetails usersDetails){
         return Jwts.builder()
-                .subject(usersDetails.getUserId())
+                .subject(usersDetails.getUserId().toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+jwtExpirationTime))
                 .signWith(getSigningKey())
