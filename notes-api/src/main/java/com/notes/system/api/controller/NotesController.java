@@ -1,16 +1,16 @@
 package com.notes.system.api.controller;
 
 import com.notes.system.api.ApiResponse;
+import com.notes.system.api.dto.NoteRequest;
+import com.notes.system.api.dto.NoteResponse;
+import com.notes.system.api.dto.PageResponse;
+import com.notes.system.api.dto.UpdateNoteRequest;
 import com.notes.system.api.entity.enums.NotesState;
-import com.notes.system.api.dto.NoteRequestDTO;
-import com.notes.system.api.dto.NoteResponseDTO;
-import com.notes.system.api.entity.Notes;
 import com.notes.system.api.service.NotesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -22,48 +22,30 @@ public class NotesController {
         this.notesService=notesService;
     }
 
-    //TODO: Implement multiple notes fetching and pagination
-    /*@GetMapping("/notes")
-    public PagedModel<Notes> getNote(@RequestParam(required = false) String state,
-                                      @RequestParam(defaultValue="1") int page,
+    @GetMapping("/notes")
+    public ResponseEntity<ApiResponse<PageResponse<NoteResponse>>> getNote(@RequestParam(defaultValue="1") int page,
                                       @RequestParam(defaultValue = "10")int size,
-                                      @RequestParam(defaultValue = "createdAt") String sortBy,
-                                      @RequestParam(defaultValue = "asc") String direction)
+                                      @RequestParam(defaultValue = "createdAt") String sort,
+                                      @RequestParam(defaultValue = "asc") String direction,
+                                      @RequestParam(defaultValue = "ACTIVE") NotesState state)
     {
-        Sort sort= Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC,sortBy);
-
-        if(state==null) {
-            return notesService.getNote(page-1, size, sort);
-        }
-        switch(state.toLowerCase()){
-            case "archived":
-                return notesService.getArchivedNotes(page-1, size, sort);
-            case "pinned":
-                return notesService.getPinnedNotes(page-1, size, sort);
-            case "trash":
-                return notesService.getTrashedNotes(page-1, size, sort);
-            default:
-                throw new IllegalArgumentException("Invalid State: "+state);
-        }
-    }*/
+        ApiResponse<PageResponse<NoteResponse>> response=notesService.getAllNotes(page-1, size, sort, direction, state);
+        //Status Code: 200
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @PostMapping("/notes")
-    public ResponseEntity<ApiResponse<Object>> addNotes(@RequestBody NoteRequestDTO noteRequest){
+    public ResponseEntity<ApiResponse<Object>> addNotes(@RequestBody NoteRequest noteRequest){
         ApiResponse<Object> response=notesService.addNote(noteRequest);
 
         //Status Code: 201
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    //TODO: Implement Bulk add functionality
-    @PostMapping("/notes/bulk")
-    public void addBulkNotes(@RequestBody List<Notes> notes){
-    }
-
     @GetMapping("/notes/{notesId}")
-    public ResponseEntity<ApiResponse<NoteResponseDTO>> getNotesById(@PathVariable int notesId,
-                                                                     @RequestParam(defaultValue = "ACTIVE") NotesState state){
-        ApiResponse<NoteResponseDTO> response= notesService.getNoteById(notesId, state);
+    public ResponseEntity<ApiResponse<NoteResponse>> getNotesById(@PathVariable int notesId,
+                                                                  @RequestParam(defaultValue = "ACTIVE") NotesState state){
+        ApiResponse<NoteResponse> response= notesService.getNoteById(notesId, state);
         //Status Code: 200
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -82,9 +64,11 @@ public class NotesController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //TODO: Implement edit note feature
     @PatchMapping("/notes/{notesId}")
-    public void updateNotes(@PathVariable int notesId, @RequestBody Notes notes){
+    public ResponseEntity<ApiResponse<Object>> updateNotes(@PathVariable int notesId, @RequestBody UpdateNoteRequest updateNoteRequest){
+        ApiResponse<Object> response=notesService.updateNote(notesId, updateNoteRequest);
+        //Status Code: 200
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/notes/{notesId}/purge")
@@ -116,7 +100,9 @@ public class NotesController {
     }
 
     @PatchMapping("/notes/{notesId}/unarchive")
-    public void unarchiveNote(@PathVariable int notesId){
-        notesService.unarchiveNotes(notesId);
+    public ResponseEntity<ApiResponse<Object>> unarchiveNote(@PathVariable int notesId){
+        ApiResponse<Object> response=notesService.unarchiveNotes(notesId);
+        //Status Code: 200
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

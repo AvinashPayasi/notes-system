@@ -4,7 +4,7 @@ import com.notes.system.api.ApiResponse;
 import com.notes.system.api.ApiStatus;
 import com.notes.system.api.UsersDetails;
 import com.notes.system.api.dto.LogInRequest;
-import com.notes.system.api.dto.RegistrationRequestDTO;
+import com.notes.system.api.dto.RegistrationRequest;
 import com.notes.system.api.entity.Users;
 import com.notes.system.api.exception.InvalidCredentialsException;
 import com.notes.system.api.exception.UserAlreadyExistsExcpetion;
@@ -32,7 +32,7 @@ public class AuthService {
         this.jwtService=jwtService;
     }
 
-    public ApiResponse<Object> registerUser(RegistrationRequestDTO registrationRequestDTO) {
+    public ApiResponse<Object> registerUser(RegistrationRequest registrationRequestDTO) {
         String tempEmail=registrationRequestDTO.getEmail();
         String tempPassword=registrationRequestDTO.getPassword();
 
@@ -54,7 +54,7 @@ public class AuthService {
         return usersRepo.existsByEmail(email);
     }
 
-    public ApiResponse<Object> loginUser(@Valid LogInRequest logInRequest) {
+    public ApiResponse<Object> loginUser(LogInRequest logInRequest) {
         Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 logInRequest.getEmail(),
                 logInRequest.getPassword()

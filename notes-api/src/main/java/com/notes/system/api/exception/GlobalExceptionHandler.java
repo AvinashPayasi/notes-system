@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -63,9 +64,23 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(InvalidPaginationException.class)
+    public ResponseEntity<ApiResponse<Object>> handleInvalidPaginationException(InvalidPaginationException exception){
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage());
+        //Status Code: 400
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, "Validation failed", "Enter valid email or password");
+        //Status Code: 400
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleGeneralException(Exception exception){
-        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, exception.getMessage());
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, "Something went wrong");
 
         //Status Code: 500
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

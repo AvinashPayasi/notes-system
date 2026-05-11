@@ -1,20 +1,22 @@
 package com.notes.system.api.dto;
 
+import com.notes.system.api.entity.Notes;
+
 import java.sql.Timestamp;
 
-public class NoteResponseDTO {
+public class NoteResponse {
     private int noteId;
     private String title;
     private String note;
     private boolean pinned;
     private Timestamp createdAt;
 
-    public NoteResponseDTO(int noteId, String title, String note, boolean pinned, Timestamp createdAt){
-        this.noteId=noteId;
-        this.title=title;
-        this.note=note;
-        this.pinned=pinned;
-        this.createdAt=createdAt;
+    public NoteResponse(Notes notes){
+        this.noteId=notes.getNotesId();
+        this.title=notes.getTitle();
+        this.note=notes.getNote();
+        this.pinned=notes.isPinned();
+        this.createdAt=notes.getCreatedAt();
     }
 
     public int getNoteId() {

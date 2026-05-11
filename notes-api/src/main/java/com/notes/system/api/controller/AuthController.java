@@ -2,7 +2,7 @@ package com.notes.system.api.controller;
 
 import com.notes.system.api.ApiResponse;
 import com.notes.system.api.dto.LogInRequest;
-import com.notes.system.api.dto.RegistrationRequestDTO;
+import com.notes.system.api.dto.RegistrationRequest;
 import com.notes.system.api.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<ApiResponse<Object>> register(@Valid @RequestBody RegistrationRequestDTO registrationRequestDTO) {
+    public ResponseEntity<ApiResponse<Object>> register(@Valid @RequestBody RegistrationRequest registrationRequestDTO) {
         ApiResponse<Object> response = authService.registerUser(registrationRequestDTO);
 
         //Status Code: 201

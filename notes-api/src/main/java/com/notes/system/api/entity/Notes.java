@@ -50,6 +50,10 @@ public class Notes {
         return note;
     }
 
+    public void setNote(String note){
+        this.note=note;
+    }
+
     public boolean isPinned(){
         return pinned;
     }

@@ -1,6 +1,6 @@
 package com.notes.system.api.dto;
 
-public class NoteRequestDTO {
+public class NoteRequest {
     private String title;
     private String note;
 

@@ -25,4 +25,6 @@ public interface NotesRepo extends JpaRepository<Notes, Integer> {
 
     @Query("SELECT n FROM Notes n WHERE n.userId= :userId AND n.noteId=:noteId")
     Optional<Notes> fetchNoteIgnoringState(@Param("userId") UUID userId, @Param("noteId") int notesId);
+
+    Page<Notes> findAllByUserIdAndState(UUID userId, NotesState state, Pageable pageable);
 }
