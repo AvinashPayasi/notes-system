@@ -1,7 +1,9 @@
-package com.notes.system.api.security;
+package com.notes.system.api.config;
 
 import com.notes.system.api.UsersDetails;
 import com.notes.system.api.repository.UsersRepo;
+import com.notes.system.api.security.JwtAuthenticationEntryPoint;
+import com.notes.system.api.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -22,9 +25,11 @@ import java.util.Map;
 @Configuration
 public class SecurityConfig {
     private final UsersRepo usersRepo;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
-    public SecurityConfig(UsersRepo usersRepo){
+    public SecurityConfig(UsersRepo usersRepo, JwtAuthenticationEntryPoint authenticationEntryPoint){
         this.usersRepo=usersRepo;
+        this.authenticationEntryPoint=authenticationEntryPoint;
     }
 
     @Bean
@@ -50,8 +55,10 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtAuthenticationFilter jwtAuthenticationFilter){
          httpSecurity.authorizeHttpRequests(
-                 customizer -> customizer.requestMatchers("/api/v1/notes/register").permitAll()
-                         .requestMatchers("/api/v1/notes/login").permitAll()
+                 customizer -> customizer
+                         .requestMatchers("/","/api","/api/","/api/v1","/api/v1/").permitAll()
+                         .requestMatchers("/api/v1/notes/register/**").permitAll()
+                         .requestMatchers("/api/v1/notes/login/**").permitAll()
                          .anyRequest().authenticated());
 
          httpSecurity.csrf(csrf -> csrf.disable());
@@ -61,6 +68,10 @@ public class SecurityConfig {
                  );
 
          httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+         httpSecurity.
+                 exceptionHandling( exception ->
+                         exception.authenticationEntryPoint(authenticationEntryPoint));
 
          return httpSecurity.build();
     }
