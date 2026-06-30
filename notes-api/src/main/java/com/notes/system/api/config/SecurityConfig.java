@@ -50,8 +50,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtAuthenticationFilter jwtAuthenticationFilter){
          httpSecurity.authorizeHttpRequests(
-                 customizer -> customizer.requestMatchers("/api/v1/notes/register/**").permitAll()
-                         .requestMatchers("/api/v1/notes/login/**").permitAll()
+                 customizer -> customizer.requestMatchers("/api/v1/notes/register").permitAll()
+                         .requestMatchers("/api/v1/notes/login").permitAll()
                          .anyRequest().authenticated());
 
          httpSecurity.csrf(csrf -> csrf.disable());
