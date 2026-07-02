@@ -38,8 +38,8 @@ public class RootController {
         Map<String, String> data= Map.of(
             "version","v1",
             "api","/api",
-            "documentation",""
-                );
+            "documentation","https://notes-api-1-0.onrender.com/swagger-ui/index.html"
+        );
         ApiResponse<Map<String, String>> apiResponse= new ApiResponse<>(ApiStatus.SUCCESS, "Welcome to Notes API",data);
         //Status Code: 200
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -92,10 +92,9 @@ public class RootController {
     @GetMapping("/api/v1")
     public ResponseEntity<ApiResponse<Map<String, String>>> versionMapping(){
         Map<String , String> data= Map.of(
-            "login","POST /api/v1/notes/login",
-            "register","POST /api/v1/notes/register",
-            "resources","GET /api/v1/notes",
-            "documentation",""
+            "authentication","/api/v1/notes/login",
+            "notes","GET /api/v1/notes",
+            "documentation","https://notes-api-1-0.onrender.com/swagger-ui/index.html"
         );
         ApiResponse<Map<String , String>> apiResponse=new ApiResponse<>(ApiStatus.SUCCESS, "Notes API v1", data);
         //Status Code:200
