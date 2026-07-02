@@ -5,13 +5,11 @@ import com.notes.system.api.ApiStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.NoSuchElementException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -78,10 +76,25 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleNoHandlerFoundException(NoResourceFoundException exception){
+        ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, "The requested endpoint doesn't exist");
+        //Status Code:404
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception){
+        ApiResponse<Object> response = new ApiResponse<>(ApiStatus.ERROR, "Path parameter 'notesId' must be an integer");
+        //Status Code:400
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleGeneralException(Exception exception){
         ApiResponse<Object> response= new ApiResponse<>(ApiStatus.ERROR, "Something went wrong");
 
+        exception.printStackTrace();
         //Status Code: 500
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }

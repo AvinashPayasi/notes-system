@@ -56,10 +56,10 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtAuthenticationFilter jwtAuthenticationFilter){
          httpSecurity.authorizeHttpRequests(
                  customizer -> customizer
-                         .requestMatchers("/","/api","/api/","/api/v1","/api/v1/").permitAll()
-                         .requestMatchers("/api/v1/notes/register/**").permitAll()
                          .requestMatchers("/api/v1/notes/login/**").permitAll()
-                         .anyRequest().authenticated());
+                         .requestMatchers("/api/v1/notes/register/**").permitAll()
+                         .requestMatchers("/api/v1/notes/**").authenticated()
+                         .anyRequest().permitAll());
 
          httpSecurity.csrf(csrf -> csrf.disable());
 

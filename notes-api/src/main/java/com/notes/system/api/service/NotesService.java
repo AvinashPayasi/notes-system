@@ -113,7 +113,7 @@ public class NotesService {
         Notes fetchedNote=notesRepo.fetchNoteIgnoringState(userId, notesId)
                 .orElseThrow( () -> new NoteNotFoundException("Note not found"));
         if(fetchedNote.getState().equals(NotesState.TRASH)){
-            throw new InvalidNoteStateException("Trash note can't be pinned");
+            throw new InvalidNoteStateException("Trash note can't be pinned/unpinned");
         }
         fetchedNote.setPinned(true);
         return new ApiResponse<>(ApiStatus.SUCCESS, "Note pinned successfully");
@@ -125,7 +125,7 @@ public class NotesService {
         Notes fetchedNote=notesRepo.fetchNoteIgnoringState(userId, notesId)
                 .orElseThrow(() -> new NoteNotFoundException("Note not found"));
         if(fetchedNote.getState().equals(NotesState.TRASH)){
-            throw new InvalidNoteStateException("Trash note can't be unpinned");
+            throw new InvalidNoteStateException("Trash note can't be pinned/unpinned");
         }
         fetchedNote.setPinned(false);
         return new ApiResponse<>(ApiStatus.SUCCESS, "Note unpinned successfully");
@@ -137,7 +137,7 @@ public class NotesService {
         Notes fetchedNote=notesRepo.fetchNoteIgnoringState(userId, notesId)
                 .orElseThrow(() -> new NoteNotFoundException("Note not found"));
         if(fetchedNote.getState().equals(NotesState.TRASH)){
-            throw new InvalidNoteStateException("Trash note can't be archived");
+            throw new InvalidNoteStateException("Trash note can't be archive/unarchive");
         }
         fetchedNote.setState(NotesState.ARCHIVE);
         return new ApiResponse<>(ApiStatus.SUCCESS, "Note archived successfully");
@@ -149,7 +149,7 @@ public class NotesService {
         Notes fetchedNote=notesRepo.fetchNoteIgnoringState(userId, notesId)
                 .orElseThrow(() -> new NoteNotFoundException("Note not found"));
         if(fetchedNote.getState().equals(NotesState.TRASH)){
-            throw new InvalidNoteStateException("Pin/Unpin cannot work in trash");
+            throw new InvalidNoteStateException("Trash note can't be archive/unarchive");
         }
         fetchedNote.setState(NotesState.ACTIVE);
         return new ApiResponse<>(ApiStatus.SUCCESS, "Note unarchived successfully");
